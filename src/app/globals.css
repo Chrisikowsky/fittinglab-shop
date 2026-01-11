@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-sans);
+}
+
+:root {
+  /* Ice Tech Theme - Light Mode */
+  --background: #f1f5f9;
+  /* slate-100 - Ice Grey */
+  --foreground: #1e293b;
+  /* slate-800 - Deep Navy */
+
+  --primary: #0891b2;
+  /* cyan-600 - Darker Cyan for contrast */
+  --secondary: #2563eb;
+  /* blue-600 */
+  --accent: #06b6d4;
+  /* cyan-500 */
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Glassmorphism Utilities - Light Mode */
+.glass-panel {
+  @apply backdrop-blur-md bg-white/60 border border-white/40 shadow-sm;
+}
+
+.glass-card {
+  @apply backdrop-blur-lg bg-white/70 border border-white/50 shadow-lg hover:shadow-xl transition-shadow;
+}
