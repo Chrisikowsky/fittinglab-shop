@@ -16,12 +16,12 @@
   --foreground: #1e293b;
   /* slate-800 - Deep Navy */
 
-  --primary: #0891b2;
-  /* cyan-600 - Darker Cyan for contrast */
-  --secondary: #2563eb;
-  /* blue-600 */
-  --accent: #06b6d4;
-  /* cyan-500 */
+  /* New Brand Colors (FittingLab) */
+  --primary: #329ebf;
+  /* Cyan-Blue */
+  --secondary: #3a6297;
+  /* Navy */
+  --accent: #329ebf;
 }
 
 body {

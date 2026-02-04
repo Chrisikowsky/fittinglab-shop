@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Navbar } from "@/components/Navbar";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Audionicks Tech - Future of Hearing",
+  title: "FittingLab - Future of Hearing",
   description: "Exklusive Tech-Lösungen für Akustiker.",
 };
 
@@ -16,7 +17,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="de" className="light">
-      <body className={`${inter.className} antialiased selection:bg-cyan-500/30 selection:text-cyan-200`}>
+      <body className={`${inter.className} antialiased selection:bg-[#329ebf]/30 selection:text-[#329ebf]`}>
+        <Navbar />
         {children}
       </body>
     </html>

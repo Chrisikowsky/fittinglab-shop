@@ -62,6 +62,6 @@ export const products: Product[] = [
             { label: "Klangbibliothek", value: "Über 500 Szenarien" },
             { label: "Updates", value: "Inklusive" },
         ],
-        imageColor: "bg-cyan-100",
+        imageColor: "bg-slate-100",
     },
 ];

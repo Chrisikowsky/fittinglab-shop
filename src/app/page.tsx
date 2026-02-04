@@ -65,48 +65,42 @@ const itemVariants = {
 export default function Home() {
   return (
     <main className="min-h-screen relative overflow-hidden bg-[var(--background)]">
-      {/* Background Decorative Elements - Light Mode optimized */}
-      <div className="absolute top-0 left-0 w-full h-[600px] bg-gradient-to-b from-cyan-100/50 to-transparent pointer-events-none" />
-      <div className="absolute -top-40 right-0 w-[700px] h-[700px] bg-blue-200/20 rounded-full blur-[120px] pointer-events-none" />
-
-      {/* Header with Logo */}
-      <header className="absolute top-0 left-0 w-full p-6 z-50">
-        <div className="container mx-auto">
-          <Image src="/logo.png" alt="FittingLab Logo" width={180} height={50} className="object-contain" priority />
-        </div>
-      </header>
+      {/* Hero Background Image */}
+      {/* Hero Background Image */}
+      <div className="absolute inset-0 w-full h-screen z-0 pointer-events-none">
+        <Image
+          src="/hero/hero_hitbox_background.jpg"
+          alt="Hero Background"
+          fill
+          className="object-cover opacity-95"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#3a6297]/60 via-[#3a6297]/10 to-transparent" />
+      </div>
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 px-6 container mx-auto">
+      <section className="relative min-h-screen flex items-center justify-center pt-20 px-6 container mx-auto">
         <motion.div
           initial="hidden"
           animate="visible"
           variants={containerVariants}
-          className="grid lg:grid-cols-2 gap-12 items-center"
+          className="max-w-4xl mx-auto flex flex-col items-center text-center"
         >
           {/* Hero Content */}
-          <div className="space-y-8 z-10">
-            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel text-cyan-700 text-sm font-medium border-cyan-200/50">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-600"></span>
-              </span>
-              Next-Gen Acoustics Tech
-            </motion.div>
-
-            <motion.h1 variants={itemVariants} className="text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] text-slate-900">
+          <div className="space-y-8 z-10 flex flex-col items-center">
+            <motion.h1 variants={itemVariants} className="text-5xl lg:text-8xl font-bold tracking-tight leading-[1.1] text-slate-900">
               Smarte Tools <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-700">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3a6297] to-[#329ebf]">
                 für Hörakustiker
               </span>
             </motion.h1>
 
-            <motion.p variants={itemVariants} className="text-xl text-slate-600 max-w-lg font-light leading-relaxed">
-              Exklusive Lösungen für Akustiker, die mehr erreichen wollen. Steigern Sie Produktivität und Kundenzufriedenheit.
+            <motion.p variants={itemVariants} className="text-2xl text-slate-100 max-w-lg font-medium leading-relaxed drop-shadow-md">
+              Exklusive Lösungen für inhabergeführte Akustiker, die mehr erreichen wollen. Steigern Sie Produktivität und Kundenzufriedenheit.
             </motion.p>
 
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4">
-              <button className="px-8 py-4 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg transition-all hover:scale-105 shadow-lg shadow-cyan-500/20">
+              <button className="px-8 py-4 bg-[#329ebf] hover:bg-[#3a6297] text-white font-bold rounded-lg transition-all hover:scale-105 shadow-lg shadow-[#329ebf]/20">
                 Lösungen entdecken
               </button>
               <button className="px-8 py-4 glass-panel hover:bg-white text-slate-700 font-medium rounded-lg transition-all flex items-center gap-2 group border-slate-200">
@@ -115,28 +109,50 @@ export default function Home() {
               </button>
             </motion.div>
           </div>
-
-          {/* Hero Visual (Abstract - Ice Edition) */}
-          <motion.div variants={itemVariants} className="relative hidden lg:block h-[500px]">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative w-80 h-80">
-                {/* Cool Ice Glow */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-cyan-300/40 to-blue-400/40 rounded-full blur-3xl animate-pulse" />
-
-                {/* Center Object */}
-                <div className="absolute inset-0 border border-white/60 rounded-full glass-card flex items-center justify-center bg-white/40 backdrop-blur-xl">
-                  <div className="w-40 h-40 bg-white rounded-full border border-cyan-100 flex items-center justify-center shadow-2xl shadow-cyan-200/50">
-                    <Activity className="w-16 h-16 text-cyan-600" />
-                  </div>
-                </div>
-                {/* Orbiting Elements */}
-                <div className="absolute inset-0 animate-spin-slow">
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 w-6 h-6 bg-blue-500 rounded-full shadow-lg shadow-blue-500/50" />
-                </div>
-              </div>
-            </div>
-          </motion.div>
         </motion.div>
+      </section>
+
+      {/* Quote Section */}
+      <section className="py-24 bg-gradient-to-b from-[#0f233a] to-slate-950 relative overflow-hidden">
+        <div className="container mx-auto px-6 text-center z-10 relative">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="max-w-4xl mx-auto"
+          >
+            <h2 className="text-2xl md:text-4xl font-light leading-normal text-white mb-12 min-h-[120px]">
+              {"Moderne Messtechnik und Anpassverfahren mit System haben einen festen Platz in der Hörakustik von Heute und Morgen.".split("").map((char, index) => (
+                <motion.span
+                  key={index}
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: { opacity: 1 }
+                  }}
+                  transition={{ duration: 0.01, delay: index * 0.03 }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </h2>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 3, duration: 0.8 }}
+              className="flex flex-col items-center gap-2"
+            >
+              <div className="w-16 h-1 bg-[#329ebf] rounded-full mb-4" />
+              <p className="text-xl font-bold text-white">Christoph Schulte</p>
+              <p className="text-slate-400 font-medium">Hörakustikmeister, Betriebswirt (HwO)</p>
+              <p className="text-[#329ebf] text-sm uppercase tracking-widest mt-1">Trainer Hörakustik & Audiologie</p>
+            </motion.div>
+          </motion.div>
+
+          {/* Ambient Background Glow */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#329ebf]/10 rounded-full blur-3xl pointer-events-none -z-10" />
+        </div>
       </section>
 
       {/* Trust/Stats Bar */}
@@ -151,7 +167,7 @@ export default function Home() {
           >
             {stats.map((stat, index) => (
               <div key={index} className="flex flex-col items-center justify-center text-center p-4">
-                <stat.icon className="w-8 h-8 text-cyan-600 mb-2 opacity-90" />
+                <stat.icon className="w-8 h-8 text-[#329ebf] mb-2 opacity-90" />
                 <span className="text-4xl font-bold text-slate-800">{stat.value}</span>
                 <span className="text-sm text-slate-500 uppercase tracking-wider mt-1 font-semibold">{stat.label}</span>
               </div>
@@ -163,7 +179,7 @@ export default function Home() {
       {/* Feature Section */}
       <section className="py-24 relative container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4 text-slate-900">Warum <span className="text-cyan-600">Audionicks</span>?</h2>
+          <h2 className="text-3xl font-bold mb-4 text-slate-900">Warum <span className="text-[#329ebf]">FittingLab</span>?</h2>
           <p className="text-slate-600 max-w-2xl mx-auto">Technologie, die Ihren Arbeitsalltag revolutioniert und Ihre Kunden begeistert.</p>
         </div>
 
@@ -178,7 +194,7 @@ export default function Home() {
               whileHover={{ y: -5 }}
               className="glass-panel p-6 rounded-2xl hover:bg-white transition-all cursor-default shadow-sm hover:shadow-md"
             >
-              <div className="w-12 h-12 rounded-lg bg-cyan-50 flex items-center justify-center mb-4 text-cyan-600 border border-cyan-100">
+              <div className="w-12 h-12 rounded-lg bg-slate-50 flex items-center justify-center mb-4 text-[#329ebf] border border-slate-100">
                 <feature.icon className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-bold text-slate-800 mb-2">{feature.title}</h3>
@@ -199,7 +215,7 @@ export default function Home() {
               <h2 className="text-4xl font-bold mb-2 text-slate-900">Hardware & Software <br />für Profis</h2>
               <p className="text-slate-600">Upgrade your practice with premium tools.</p>
             </div>
-            <button className="text-cyan-600 hover:text-cyan-700 font-medium flex items-center gap-2 transition-colors">
+            <button className="text-[#329ebf] hover:text-[#3a6297] font-medium flex items-center gap-2 transition-colors">
               Alle Produkte ansehen <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -237,9 +253,9 @@ export default function Home() {
                     <p className="text-sm text-slate-500 mb-4 h-10">{product.desc}</p>
 
                     <div className="flex items-center justify-between mt-6">
-                      <span className="text-lg font-mono font-bold text-cyan-700">{product.price} <span className="text-xs text-slate-400 font-normal">netto</span></span>
+                      <span className="text-lg font-mono font-bold text-[#329ebf]">{product.price} <span className="text-xs text-slate-400 font-normal">netto</span></span>
 
-                      <button className="p-3 bg-slate-100 hover:bg-cyan-600 text-slate-600 hover:text-white rounded-lg transition-all shadow-sm hover:shadow-lg hover:shadow-cyan-500/30">
+                      <button className="p-3 bg-slate-100 hover:bg-[#329ebf] text-slate-600 hover:text-white rounded-lg transition-all shadow-sm hover:shadow-lg hover:shadow-[#329ebf]/30">
                         <ShoppingCart className="w-5 h-5" />
                       </button>
                     </div>
@@ -255,12 +271,12 @@ export default function Home() {
       <footer className="py-12 bg-slate-900 text-center text-slate-400 text-sm">
         <div className="container mx-auto px-6">
           <div className="mb-8 flex justify-center opacity-50 grayscale hover:grayscale-0 transition-all">
-            <Image src="/logo.png" alt="Logo" width={120} height={40} className="brightness-0 invert" />
+            <Image src="/logo-v2.png" alt="Logo" width={120} height={40} className="brightness-0 invert" />
           </div>
-          <p className="mb-4">Excellence in Hearing Technology.</p>
-          <p>© {new Date().getFullYear()} Audionicks Tech GmbH. All rights reserved.</p>
+          <p className="mb-4 text-[#329ebf]">Excellence in Hearing Technology.</p>
+          <p>© {new Date().getFullYear()} FittingLab Tech GmbH. All rights reserved.</p>
         </div>
       </footer>
-    </main>
+    </main >
   );
 }
