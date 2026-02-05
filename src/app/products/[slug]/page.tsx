@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Check, Shield, Truck } from "lucide-react";
-import { medusa } from "@/lib/medusa";
+import { sdk } from "@/lib/medusa";
 import { AddToCartButton } from "@/components/AddToCartButton";
 
 interface PageProps {
@@ -11,13 +11,30 @@ interface PageProps {
     };
 }
 
-// Function to fetch product by handle (slug)
 async function getProduct(handle: string) {
     try {
-        const { products } = await medusa.products.list({
+        // Try exact handle first
+        let { products } = await sdk.store.product.list({
             handle,
-            expand: "variants,options,images",
+            fields: "*variants,*variants.prices,*images,*options",
         });
+
+        // If not found, try adding a leading slash (user case)
+        if (products.length === 0) {
+            ({ products } = await sdk.store.product.list({
+                handle: `/${handle}`,
+                fields: "*variants,*variants.prices,*images,*options",
+            }));
+        }
+
+        // Also try removing slash if handle passed had one
+        if (products.length === 0 && handle.startsWith('/')) {
+            ({ products } = await sdk.store.product.list({
+                handle: handle.substring(1),
+                fields: "*variants,*variants.prices,*images,*options",
+            }));
+        }
+
 
         if (products.length === 0) {
             return null;
@@ -31,16 +48,22 @@ async function getProduct(handle: string) {
 }
 
 export default async function ProductPage({ params }: PageProps) {
-    const product = await getProduct(params.slug);
+    const { slug } = await params;
+    const product = await getProduct(slug);
 
     if (!product) {
         notFound();
     }
 
-    // Format price (assuming EUR and 100 cents factor)
-    // In a real app, you would handle currency dynamically
-    const price = product.variants[0]?.prices[0]?.amount
-        ? (product.variants[0].prices[0].amount / 100).toLocaleString("de-DE", {
+    // Default price formatting
+    // Medusa 2.0: prices are in `calculated_price` if using cart context, or raw in variants
+    // Here we just grab the first EUR price we find for display
+    const eurPrice = product.variants?.[0]?.prices?.find((p: any) => p.currency_code === "eur");
+    const priceAmount = eurPrice ? eurPrice.amount : 0;
+
+    // Medusa stores amounts in smallest unit (cents)
+    const price = priceAmount
+        ? (priceAmount).toLocaleString("de-DE", {
             style: "currency",
             currency: "EUR",
         })
@@ -71,7 +94,7 @@ export default async function ProductPage({ params }: PageProps) {
                         <div className="relative aspect-square rounded-3xl overflow-hidden bg-white border border-slate-100 shadow-xl shadow-slate-200/50">
                             {product.thumbnail && (
                                 <Image
-                                    src={product.thumbnail}
+                                    src={product.thumbnail.startsWith("http") ? product.thumbnail : `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000"}${product.thumbnail}`}
                                     alt={product.title || "Product Image"}
                                     fill
                                     className="object-contain p-12"
@@ -108,8 +131,8 @@ export default async function ProductPage({ params }: PageProps) {
 
                         {/* Add to Cart */}
                         <div className="space-y-4">
-                            {/* We assume the first variant is the main one for now */}
-                            {product.variants[0]?.id && (
+                            {/* We pass the first variant ID */}
+                            {product.variants?.[0]?.id && (
                                 <AddToCartButton variantId={product.variants[0].id} />
                             )}
 

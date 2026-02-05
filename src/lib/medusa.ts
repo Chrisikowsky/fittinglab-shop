@@ -1,8 +1,10 @@
-import Medusa from "@medusajs/medusa-js";
+import Medusa from "@medusajs/js-sdk";
 
-// Initialize the Medusa client
-// Uses localhost:9000 as default if NEXT_PUBLIC_MEDUSA_BACKEND_URL is not set
-export const medusa = new Medusa({
+export const sdk = new Medusa({
     baseUrl: process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000",
-    maxRetries: 3,
+    debug: process.env.NODE_ENV === "development",
+    publishableKey: process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY,
 });
+
+export const medusa = sdk; // Keep alias for compatibility or remove/replace usages
+

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ShoppingCart, Loader2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { medusa } from "@/lib/medusa";
+import { sdk } from "@/lib/medusa";
 
 interface AddToCartButtonProps {
     variantId: string;
@@ -18,9 +18,11 @@ export function AddToCartButton({ variantId }: AddToCartButtonProps) {
         let cartId = localStorage.getItem("cart_id");
 
         if (!cartId) {
-            const { cart } = await medusa.carts.create();
+            const { cart } = await sdk.store.cart.create({});
             cartId = cart.id;
-            localStorage.setItem("cart_id", cartId);
+            if (cartId) {
+                localStorage.setItem("cart_id", cartId);
+            }
         }
 
         return cartId;
@@ -33,8 +35,12 @@ export function AddToCartButton({ variantId }: AddToCartButtonProps) {
         try {
             const cartId = await getCartId();
 
+            if (!cartId) {
+                throw new Error("Failed to create cart");
+            }
+
             // Add line item to cart
-            await medusa.carts.lineItems.create(cartId, {
+            await sdk.store.cart.createLineItem(cartId, {
                 variant_id: variantId,
                 quantity: 1,
             });
