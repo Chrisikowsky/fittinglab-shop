@@ -5,9 +5,8 @@ WORKDIR /app/backend
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-# Using npm install to ensure we get everything needed for build
-RUN npm install
+# Install dependencies using clean install
+RUN npm ci
 
 # Copy source
 COPY . .
