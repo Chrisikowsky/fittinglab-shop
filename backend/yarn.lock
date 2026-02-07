@@ -1887,7 +1887,7 @@
   resolved "https://registry.yarnpkg.com/@medusajs/cache-inmemory/-/cache-inmemory-2.13.1.tgz#8e67b88ca2c04bee0ec14fa9fedaed20de25d916"
   integrity sha512-F5SxUnxmkW4GbX/RiLn2PaiSbRm8sMupJ7d0MXt4dBZBXDXCKyouhuTLcOnskDgTLkflaWU4DGRyRACSTV8Vnw==
 
-"@medusajs/cache-redis@2.13.1":
+"@medusajs/cache-redis@2.13.1", "@medusajs/cache-redis@^2.13.1":
   version "2.13.1"
   resolved "https://registry.yarnpkg.com/@medusajs/cache-redis/-/cache-redis-2.13.1.tgz#281dfd644f971f3681233ac0d05322387a47ed56"
   integrity sha512-lpRaIrT2Hy9tI1PKpsim/1FSLz34aFw3wnlOI4aCFPSrkVwoSJVBjqE0ZxMuYJO161j3roXxzGfXUrUCHT0xSg==
@@ -2051,7 +2051,7 @@
   resolved "https://registry.yarnpkg.com/@medusajs/event-bus-local/-/event-bus-local-2.13.1.tgz#ea0e274f8eae44f8849b077ab743d203d892cc36"
   integrity sha512-TsPznWV1/aQJYQ4dvX0PlLJBWkWrxTCTsk0Z4T3SDplaFcZKjFLgZa+vrRftE8yIRCb03/8bqRZ488kFEHVEbw==
 
-"@medusajs/event-bus-redis@2.13.1":
+"@medusajs/event-bus-redis@2.13.1", "@medusajs/event-bus-redis@^2.13.1":
   version "2.13.1"
   resolved "https://registry.yarnpkg.com/@medusajs/event-bus-redis/-/event-bus-redis-2.13.1.tgz#2eed9d23d39160541039ea21154cc028a7638f4e"
   integrity sha512-puL6tmvGtnXyg1F0fps3lh4jxOm8yRR6F7NXXwNUq3W4wb3HU4RIWDCE61wdG0Ca0YEtgKdtu4Daf+rYVL0wAg==
@@ -2431,7 +2431,7 @@
     cron-parser "^4.9.0"
     ulid "^2.3.0"
 
-"@medusajs/workflow-engine-redis@2.13.1":
+"@medusajs/workflow-engine-redis@2.13.1", "@medusajs/workflow-engine-redis@^2.13.1":
   version "2.13.1"
   resolved "https://registry.yarnpkg.com/@medusajs/workflow-engine-redis/-/workflow-engine-redis-2.13.1.tgz#185d2c7c67e3c1e150be8ac52561bbb9ac9a3946"
   integrity sha512-VGBca4nMHKTO4DxMLFr14JHZrA8+5pt1A/9IkWaW7cygcjte2XrB6IjMeQjH82TvAMs650aQSFdkLYDFFNuTnQ==

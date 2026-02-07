@@ -16,5 +16,27 @@ module.exports = defineConfig({
   },
   admin: {
     path: "/dashboard",
-  }
+  },
+  modules: [
+    {
+      resolve: "@medusajs/event-bus-redis",
+      options: {
+        redisUrl: process.env.REDIS_URL,
+      },
+    },
+    {
+      resolve: "@medusajs/workflow-engine-redis",
+      options: {
+        redis: {
+          url: process.env.REDIS_URL,
+        },
+      },
+    },
+    {
+      resolve: "@medusajs/cache-redis",
+      options: {
+        redisUrl: process.env.REDIS_URL,
+      },
+    },
+  ],
 })
