@@ -35,6 +35,7 @@ export default function RegisterPage() {
                     "Content-Type": "application/json",
                     "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "",
                 },
+                credentials: "include", // Required for cookies!
                 body: JSON.stringify({
                     email,
                     password,
