@@ -51,6 +51,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
                     "Content-Type": "application/json",
                     "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "",
                 },
+                credentials: "include",
                 body: JSON.stringify({
                     email,
                     password,
@@ -83,6 +84,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
                 headers: {
                     "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "",
                 },
+                credentials: "include",
             });
 
             setCustomer(null);
