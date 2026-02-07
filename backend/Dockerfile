@@ -24,6 +24,5 @@ RUN echo "Checking build output..." && ls -R .medusa
 EXPOSE 9000
 
 # Start the application using direct node execution (Production Mode)
-# "medusa start" can trigger dev behaviors/lookups. 
-# "node .medusa/server/index.js" runs the built artifact directly.
-CMD ["sh", "-c", "npx medusa db:migrate && node .medusa/server/index.js"]
+# Added 'ls -laR .medusa' to debug runtime file existence before crash
+CMD ["sh", "-c", "echo 'RUNTIME FILE CHECK:' && ls -laR .medusa && npx medusa db:migrate && node .medusa/server/index.js"]
