@@ -3,7 +3,7 @@ import { loadEnv, defineConfig } from '@medusajs/framework/utils'
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
 
-const modules = [];
+const modules: any[] = [];
 
 if (process.env.REDIS_URL) {
   modules.push(
