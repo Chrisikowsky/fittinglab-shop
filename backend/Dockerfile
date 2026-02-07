@@ -17,8 +17,12 @@ COPY . .
 # Build the application
 RUN yarn build
 
-# Debug: List build artifacts to confirm admin files exist
-RUN echo "Checking build output..." && ls -R .medusa
+# Fix: Ensure admin files are in the 'dashboard' folder to match medusa-config path
+# We copy instead of move to be safe (so it exists in both admin and dashboard)
+RUN cp -r .medusa/server/public/admin .medusa/server/public/dashboard
+
+# Debug: List build artifacts to confirm dashboard files exist
+RUN echo "Checking build output..." && ls -R .medusa/server/public
 
 # Expose port (Medusa default 9000)
 EXPOSE 9000
