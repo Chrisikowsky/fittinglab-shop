@@ -15,7 +15,6 @@ module.exports = defineConfig({
     }
   },
   admin: {
-    disable: process.env.DISABLE_ADMIN === "true",
-    path: "/app",
+    path: "/admin",
   }
 })
