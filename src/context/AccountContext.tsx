@@ -41,16 +41,33 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     const login = async (email: string, password: string) => {
         setLoading(true);
         try {
-            // Medusa V2 Auth: Email/Pass provider
-            await sdk.auth.authenticate("emailpass", {
-                email,
-                password,
+            // WORKAROUND: SDK V2 Auth types are strict/missing 'authenticate'.
+            // Use direct fetch to /auth/customer/emailpass (Standard V2 Login for EmailPass)
+            const baseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000";
+
+            const response = await fetch(`${baseUrl}/auth/customer/emailpass`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "",
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                }),
             });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.message || "Login fehlgeschlagen");
+            }
+
+            // After login, session is set cookie-wise.
             await fetchCustomer();
             router.push("/account");
         } catch (e: any) {
             console.error("Login failed", e);
-            throw e; // Let component handle error display
+            throw e;
         } finally {
             setLoading(false);
         }
@@ -58,7 +75,16 @@ export function AccountProvider({ children }: { children: ReactNode }) {
 
     const logout = async () => {
         try {
-            await sdk.auth.signout(); // or sdk.auth.deleteSession() check SDK
+            // WORKAROUND: SDK V2 'signout' might be missing or different
+            // DELETE /auth/session is standard
+            const baseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000";
+            await fetch(`${baseUrl}/auth/session`, {
+                method: "DELETE",
+                headers: {
+                    "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "",
+                },
+            });
+
             setCustomer(null);
             router.push("/");
         } catch (e) {
