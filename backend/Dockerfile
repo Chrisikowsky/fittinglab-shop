@@ -17,12 +17,18 @@ COPY . .
 # Build the application
 RUN yarn build
 
-# Debug: List build artifacts to confirm admin files exist
-RUN echo "Checking build output..." && ls -R .medusa
+# FIX: Copy admin build artifacts to 'dashboard' folder.
+# Medusa builds to 'admin' by default, but our config 'path' is '/dashboard'.
+# This copy ensures the server finds the files regardless of which path it checks.
+RUN cp -r .medusa/server/public/admin .medusa/server/public/dashboard
+
+# Debug: Verify the dashboard folder exists now
+RUN echo "Verifying build output..." && ls -F .medusa/server/public/
 
 # Expose port (Medusa default 9000)
 EXPOSE 9000
 
-# Start the application using direct node execution (Production Mode)
-# Added 'ls -laR .medusa' to debug runtime file existence before crash
-CMD ["sh", "-c", "echo 'RUNTIME FILE CHECK:' && ls -laR .medusa && npx medusa db:migrate && node .medusa/server/index.js"]
+# Start the application
+# We use 'yarn start' (medusa start) because a standalone server entrypoint was not found.
+# We explicitly run migrations before starting.
+CMD ["sh", "-c", "npx medusa db:migrate && yarn start"]
