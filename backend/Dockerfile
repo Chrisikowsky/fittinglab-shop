@@ -18,17 +18,17 @@ COPY . .
 RUN yarn build
 
 # FIX: Copy admin build artifacts to 'dashboard' folder.
-# Medusa builds to 'admin' by default, but our config 'path' is '/dashboard'.
-# This copy ensures the server finds the files regardless of which path it checks.
+# We keep this as a safeguard, although running from .medusa/server might solve pathing.
 RUN cp -r .medusa/server/public/admin .medusa/server/public/dashboard
 
-# Debug: Verify the dashboard folder exists now
-RUN echo "Verifying build output..." && ls -F .medusa/server/public/
+# Debug: Verifying build output
+RUN echo "Verifying build output..." && ls -F .medusa/server/
 
 # Expose port (Medusa default 9000)
 EXPOSE 9000
 
-# Start the application
-# We use 'yarn start' (medusa start) because a standalone server entrypoint was not found.
-# We explicitly run migrations before starting.
-CMD ["sh", "-c", "npx medusa db:migrate && yarn start"]
+# Start the application - Variant B (User Suggestion)
+# We change directory to the built server artifact and run from there.
+# This ensures "medusa start" runs in the context of the production build.
+# Railway injects env vars, so we don't need to copy .env file.
+CMD ["sh", "-lc", "cd .medusa/server && npx medusa db:migrate && npm run start"]
