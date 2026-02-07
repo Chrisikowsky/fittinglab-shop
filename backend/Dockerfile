@@ -29,6 +29,5 @@ EXPOSE 9000
 
 # Start the application - Variant B (User Suggestion)
 # We change directory to the built server artifact and run from there.
-# This ensures "medusa start" runs in the context of the production build.
-# Railway injects env vars, so we don't need to copy .env file.
-CMD ["sh", "-lc", "cd .medusa/server && npx medusa db:migrate && npm run start"]
+# We also attempt to create a default admin user (ignoring error if exists) to simplify setup.
+CMD ["sh", "-lc", "cd .medusa/server && npx medusa db:migrate && (npx medusa user --email admin@fittinglab.com --password supersecret || true) && npm run start"]
