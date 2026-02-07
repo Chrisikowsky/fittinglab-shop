@@ -5,8 +5,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { ArrowUp, Menu, User, X } from "lucide-react";
+import { ShoppingCart, Menu, X, User, ArrowUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useCart } from "@/context/CartContext";
+import { useAccount } from "@/context/AccountContext";
 
 const navLinks = [
     { name: "Produkte", href: "/" },
@@ -42,6 +44,10 @@ export function Navbar() {
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
+
+    const { cart } = useCart();
+    const { customer } = useAccount();
+    const itemCount = cart?.items?.reduce((acc: number, item: any) => acc + item.quantity, 0) || 0;
 
     return (
         <motion.nav
@@ -83,12 +89,21 @@ export function Navbar() {
                         })}
                     </div>
 
-                    {/* Desktop Call to Action */}
-                    <div className="hidden md:block">
-                        <button className="px-6 py-2.5 rounded-lg border border-white/20 text-white text-sm font-medium transition-all duration-300 hover:bg-white/10 hover:border-white/40 flex items-center gap-2 group">
+                    {/* Desktop Call to Action & Cart */}
+                    <div className="hidden md:flex items-center gap-6">
+                        <Link href="/cart" className="relative group p-2">
+                            <ShoppingCart className="w-6 h-6 text-white/80 group-hover:text-[#329ebf] transition-colors" />
+                            {itemCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-[#329ebf] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center shadow-lg border border-[#0f233a]">
+                                    {itemCount}
+                                </span>
+                            )}
+                        </Link>
+
+                        <Link href="/account/login" className="px-6 py-2.5 rounded-lg border border-white/20 text-white text-sm font-medium transition-all duration-300 hover:bg-white/10 hover:border-white/40 flex items-center gap-2 group">
                             <User className="w-4 h-4 text-[#329ebf] group-hover:text-white transition-colors" />
-                            Partner Login
-                        </button>
+                            {customer ? "Mein Konto" : "Partner Login"}
+                        </Link>
                     </div>
 
                     {/* Mobile Toggle */}
@@ -154,9 +169,13 @@ export function Navbar() {
                                 }}
                                 className="mt-8"
                             >
-                                <button className="px-12 py-4 rounded-xl border-2 border-white/30 text-white text-xl font-bold">
-                                    Partner Login
-                                </button>
+                                <Link
+                                    href="/account/login"
+                                    onClick={() => setIsOpen(false)}
+                                    className="px-12 py-4 rounded-xl border-2 border-white/30 text-white text-xl font-bold inline-block"
+                                >
+                                    {customer ? "Mein Konto" : "Partner Login"}
+                                </Link>
                             </motion.div>
                         </motion.div>
                     </motion.div>

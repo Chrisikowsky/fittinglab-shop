@@ -3,7 +3,22 @@ import { loadEnv, defineConfig, Modules } from '@medusajs/framework/utils'
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
 
-const modules: any[] = [];
+const modules: any[] = [
+  {
+    resolve: "@medusajs/medusa/auth",
+    options: {
+      providers: [
+        {
+          resolve: "@medusajs/medusa/auth-emailpass",
+          id: "emailpass",
+          options: {
+            // Options if needed
+          }
+        },
+      ],
+    },
+  },
+];
 
 if (process.env.REDIS_URL) {
   modules.push(

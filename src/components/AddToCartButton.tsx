@@ -5,13 +5,19 @@ import { ShoppingCart, Loader2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { sdk } from "@/lib/medusa";
 
+import { useCart } from "@/context/CartContext";
+
 interface AddToCartButtonProps {
     variantId: string;
+    quantity?: number;
+    className?: string;
+    showLabel?: boolean;
 }
 
-export function AddToCartButton({ variantId }: AddToCartButtonProps) {
+export function AddToCartButton({ variantId, quantity = 1, className, showLabel = true }: AddToCartButtonProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const { refreshCart } = useCart();
 
     // Helper to get or create a cart ID
     const getCartId = async () => {
@@ -28,7 +34,12 @@ export function AddToCartButton({ variantId }: AddToCartButtonProps) {
         return cartId;
     };
 
-    const handleAddToCart = async () => {
+    const handleAddToCart = async (e?: React.MouseEvent) => {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
         setIsLoading(true);
         setIsSuccess(false);
 
@@ -39,12 +50,12 @@ export function AddToCartButton({ variantId }: AddToCartButtonProps) {
                 throw new Error("Failed to create cart");
             }
 
-            // Add line item to cart
             await sdk.store.cart.createLineItem(cartId, {
                 variant_id: variantId,
-                quantity: 1,
+                quantity: quantity,
             });
 
+            await refreshCart(); // Update global cart state
             setIsSuccess(true);
 
             // Reset success state after 2 seconds
@@ -62,26 +73,27 @@ export function AddToCartButton({ variantId }: AddToCartButtonProps) {
             onClick={handleAddToCart}
             disabled={isLoading || isSuccess}
             className={cn(
-                "w-full py-4 text-white font-bold text-lg rounded-xl transition-all shadow-lg flex items-center justify-center gap-2",
+                "py-4 text-white font-bold text-lg rounded-xl transition-all shadow-lg flex items-center justify-center gap-2",
                 isSuccess
                     ? "bg-green-500 hover:bg-green-600 shadow-green-500/20"
-                    : "bg-[#329ebf] hover:bg-[#3a6297] hover:scale-[1.02] shadow-[#329ebf]/30"
+                    : "bg-[#329ebf] hover:bg-[#3a6297] hover:scale-[1.02] shadow-[#329ebf]/30",
+                className
             )}
         >
             {isLoading ? (
                 <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Wird hinzugefügt...</span>
+                    {showLabel && <span>...</span>}
                 </>
             ) : isSuccess ? (
                 <>
                     <Check className="w-5 h-5" />
-                    <span>Hinzugefügt</span>
+                    {showLabel && <span>Hinzugefügt</span>}
                 </>
             ) : (
                 <>
                     <ShoppingCart className="w-5 h-5" />
-                    <span>In den Warenkorb</span>
+                    {showLabel && <span>In den Warenkorb</span>}
                 </>
             )}
         </button>

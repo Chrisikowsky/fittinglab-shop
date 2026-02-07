@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Check, Shield, Truck } from "lucide-react";
 import { sdk } from "@/lib/medusa";
-import { AddToCartButton } from "@/components/AddToCartButton";
+import { ProductActions } from "@/components/ProductActions";
 
 interface PageProps {
     params: {
@@ -63,7 +63,7 @@ export default async function ProductPage({ params }: PageProps) {
 
     // Medusa stores amounts in smallest unit (cents)
     const price = priceAmount
-        ? (priceAmount).toLocaleString("de-DE", {
+        ? (priceAmount / 100).toLocaleString("de-DE", {
             style: "currency",
             currency: "EUR",
         })
@@ -129,11 +129,10 @@ export default async function ProductPage({ params }: PageProps) {
                             ))}
                         </div>
 
-                        {/* Add to Cart */}
+                        {/* Add to Cart Section */}
                         <div className="space-y-4">
-                            {/* We pass the first variant ID */}
                             {product.variants?.[0]?.id && (
-                                <AddToCartButton variantId={product.variants[0].id} />
+                                <ProductActions variantId={product.variants[0].id} />
                             )}
 
                             <div className="flex items-center justify-center gap-6 text-sm text-slate-500">

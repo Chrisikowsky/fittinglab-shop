@@ -17,7 +17,7 @@ async function getProducts() {
       const priceAmount = eurPrice ? eurPrice.amount : 0;
 
       const priceFormatted = priceAmount
-        ? (priceAmount).toLocaleString("de-DE", {
+        ? (priceAmount / 100).toLocaleString("de-DE", {
           style: "currency",
           currency: "EUR",
         })
@@ -39,6 +39,7 @@ async function getProducts() {
         description: product.description || "",
         thumbnail: imageUrl,
         price: priceFormatted,
+        defaultVariantId: product.variants?.[0]?.id,
       };
     });
   } catch (error) {

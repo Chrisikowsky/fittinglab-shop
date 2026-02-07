@@ -67,11 +67,14 @@ interface Product {
     description: string;
     thumbnail: string | null;
     price: string;
+    defaultVariantId?: string;
 }
 
 interface HomeClientProps {
     products: Product[];
 }
+
+import { ProductCard } from "./ProductCard";
 
 export default function HomeClient({ products }: HomeClientProps) {
     return (
@@ -232,45 +235,7 @@ export default function HomeClient({ products }: HomeClientProps) {
 
                     <div className="grid md:grid-cols-3 gap-8">
                         {products.map((product) => (
-                            <Link href={`/products/${product.handle}`} key={product.id} className="block group h-full">
-                                <motion.div
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    whileHover={{ scale: 1.02 }}
-                                    className="relative glass-card rounded-2xl overflow-hidden bg-white h-full"
-                                >
-                                    {/* Product Image Placeholder - Light & Clean */}
-                                    <div className={cn("h-48 w-full relative overflow-hidden flex items-center justify-center bg-white")}>
-                                        {product.thumbnail ? (
-                                            <Image
-                                                src={product.thumbnail}
-                                                alt={product.title}
-                                                fill
-                                                className="object-cover group-hover:scale-110 transition-transform duration-500"
-                                            />
-                                        ) : (
-                                            <div className="w-32 h-32 rounded-full bg-slate-50 flex items-center justify-center backdrop-blur-sm shadow-sm group-hover:scale-110 transition-transform duration-500">
-                                                {/* Device representation */}
-                                                <div className="w-16 h-2 bg-slate-200 rounded-full shadow-sm" />
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className="p-6">
-                                        <h3 className="text-xl font-bold mb-1 text-slate-800">{product.title}</h3>
-                                        <p className="text-sm text-slate-500 mb-4 h-10 overflow-hidden text-ellipsis">{product.description}</p>
-
-                                        <div className="flex items-center justify-between mt-6">
-                                            <span className="text-lg font-mono font-bold text-[#329ebf]">{product.price} <span className="text-xs text-slate-400 font-normal">netto</span></span>
-
-                                            <button className="p-3 bg-slate-100 hover:bg-[#329ebf] text-slate-600 hover:text-white rounded-lg transition-all shadow-sm hover:shadow-lg hover:shadow-[#329ebf]/30">
-                                                <ShoppingCart className="w-5 h-5" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            </Link>
+                            <ProductCard key={product.id} product={product} />
                         ))}
                     </div>
                 </div>
