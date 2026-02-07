@@ -17,13 +17,7 @@ COPY . .
 # Build the application
 RUN yarn build
 
-# Fix: Rename admin build directory to match 'path: "/dashboard"' in config
-# Medusa build defaults to 'admin', but we need 'dashboard' to avoid reserved route conflicts
-RUN if [ -d ".medusa/server/public/admin" ]; then \
-    mv .medusa/server/public/admin .medusa/server/public/dashboard; \
-    fi
-
-# Debug: List build artifacts to confirm dashboard files exist
+# Debug: List build artifacts to confirm admin files exist
 RUN echo "Checking build output..." && ls -R .medusa
 
 # Expose port (Medusa default 9000)
