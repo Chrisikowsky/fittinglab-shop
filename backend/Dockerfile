@@ -17,15 +17,13 @@ COPY . .
 # Build the application
 RUN yarn build
 
-# Fix: Ensure admin files are in the 'dashboard' folder to match medusa-config path
-# We copy instead of move to be safe (so it exists in both admin and dashboard)
-RUN cp -r .medusa/server/public/admin .medusa/server/public/dashboard
-
-# Debug: List build artifacts to confirm dashboard files exist
-RUN echo "Checking build output..." && ls -R .medusa/server/public
+# Debug: List build artifacts to confirm admin files exist
+RUN echo "Checking build output..." && ls -R .medusa
 
 # Expose port (Medusa default 9000)
 EXPOSE 9000
 
-# Start the application
-CMD ["yarn", "start"]
+# Start the application using direct node execution (Production Mode)
+# "medusa start" can trigger dev behaviors/lookups. 
+# "node .medusa/server/index.js" runs the built artifact directly.
+CMD ["sh", "-c", "npx medusa db:migrate && node .medusa/server/index.js"]
