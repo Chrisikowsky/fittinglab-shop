@@ -29,7 +29,7 @@ export default function RegisterPage() {
             // WORKAROUND: Use fetch directly if SDK method fails or has strict types
             // Endpoint: /auth/customer/emailpass/register (NOT /auth/user - user is for admin)
             const baseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000";
-            const response = await fetch(`${baseUrl}/auth/customer/emailpass/register`, {
+            const response = await fetch(`${baseUrl}/store/custom/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
