@@ -59,6 +59,7 @@ export default function RegisterPage() {
                 },
                 credentials: "include",
                 body: JSON.stringify({
+                    email,
                     first_name: firstName,
                     last_name: lastName,
                 }),
