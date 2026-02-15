@@ -57,9 +57,9 @@ module.exports = defineConfig({
       adminCors: process.env.ADMIN_CORS!,
       authCors: process.env.AUTH_CORS!,
       jwtSecret: process.env.JWT_SECRET || "supersecret",
-      jwtSecret: process.env.JWT_SECRET || "supersecret",
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
-      trustProxy: true, // Required for Railway/Vercel to trust the proxy and set secure cookies
+      // @ts-ignore - trustProxy is required for secure cookies behind proxy
+      trustProxy: true,
       // Force cookies to be secure and sameSite: none for cross-domain usage
       // @ts-ignore - 'cookie' might not be in the type definition but is passed to express-session
       cookie: {
