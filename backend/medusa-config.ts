@@ -59,13 +59,6 @@ module.exports = defineConfig({
       jwtSecret: process.env.JWT_SECRET || "supersecret",
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
     },
-    // @ts-ignore - cookieOptions is passed to express-session for cross-domain cookie support
-    cookieOptions: {
-      sameSite: "none",
-      secure: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      domain: process.env.NODE_ENV === "production" ? ".fittinglab.pro" : undefined,
-    },
   },
   admin: {
     path: "/dashboard",
