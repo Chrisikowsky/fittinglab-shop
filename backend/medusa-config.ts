@@ -58,18 +58,14 @@ module.exports = defineConfig({
       authCors: process.env.AUTH_CORS!,
       jwtSecret: process.env.JWT_SECRET || "supersecret",
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
-      // @ts-ignore - trustProxy is required for secure cookies behind proxy
-      trustProxy: true,
-      // Force cookies to be secure and sameSite: none for cross-domain usage
-      // @ts-ignore - 'cookie' might not be in the type definition but is passed to express-session
-      cookie: {
-        sameSite: "none",
-        secure: true,
-        maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        domain: process.env.NODE_ENV === "production" ? ".fittinglab.pro" : undefined,
-      }
-
-    }
+    },
+    // @ts-ignore - cookieOptions is passed to express-session for cross-domain cookie support
+    cookieOptions: {
+      sameSite: "none",
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      domain: process.env.NODE_ENV === "production" ? ".fittinglab.pro" : undefined,
+    },
   },
   admin: {
     path: "/dashboard",
