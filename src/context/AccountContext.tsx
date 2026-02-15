@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { sdk } from "@/lib/medusa";
 import { useRouter } from "next/navigation";
 
 interface AccountContextType {
@@ -14,6 +13,9 @@ interface AccountContextType {
 
 const AccountContext = createContext<AccountContextType | undefined>(undefined);
 
+const baseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000";
+const publishableKey = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "";
+
 export function AccountProvider({ children }: { children: ReactNode }) {
     const [customer, setCustomer] = useState<any | null>(null);
     const [loading, setLoading] = useState(true);
@@ -21,14 +23,22 @@ export function AccountProvider({ children }: { children: ReactNode }) {
 
     const fetchCustomer = async () => {
         try {
-            // Medusa V2: Retrieve "me"
-            const { customer } = await sdk.store.customer.retrieve("me", {
-                fields: "+email,+first_name,+last_name,+orders.id,+orders.display_id,+orders.total,+orders.created_at,+orders.status,+orders.fulfillment_status,+orders.payment_status"
+            const res = await fetch(`${baseUrl}/store/customers/me`, {
+                method: "GET",
+                headers: {
+                    "x-publishable-api-key": publishableKey,
+                },
+                credentials: "include",
             });
-            setCustomer(customer);
+
+            if (!res.ok) {
+                throw new Error("Not authenticated");
+            }
+
+            const data = await res.json();
+            setCustomer(data.customer);
         } catch (e) {
             console.error("fetchCustomer failed:", e);
-            // Not logged in or error
             setCustomer(null);
         } finally {
             setLoading(false);
@@ -42,21 +52,14 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     const login = async (email: string, password: string) => {
         setLoading(true);
         try {
-            // WORKAROUND: SDK V2 Auth types are strict/missing 'authenticate'.
-            // Use direct fetch to /auth/customer/emailpass (Standard V2 Login for EmailPass)
-            const baseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000";
-
             const response = await fetch(`${baseUrl}/auth/customer/emailpass`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "",
+                    "x-publishable-api-key": publishableKey,
                 },
                 credentials: "include",
-                body: JSON.stringify({
-                    email,
-                    password,
-                }),
+                body: JSON.stringify({ email, password }),
             });
 
             if (!response.ok) {
@@ -64,12 +67,8 @@ export function AccountProvider({ children }: { children: ReactNode }) {
                 throw new Error(data.message || "Login fehlgeschlagen");
             }
 
-            // After login, session is set cookie-wise.
+            // After login, session cookie is set. Now fetch customer data.
             await fetchCustomer();
-
-            // Check if customer is set (need to access state or just check logic)
-            // Since fetchCustomer updates state, we can't check 'customer' immediately here due to closure.
-            // But we can check if we want to redirect.
             router.push("/account");
         } catch (e: any) {
             console.error("Login failed", e);
@@ -81,13 +80,10 @@ export function AccountProvider({ children }: { children: ReactNode }) {
 
     const logout = async () => {
         try {
-            // WORKAROUND: SDK V2 'signout' might be missing or different
-            // DELETE /auth/session is standard
-            const baseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000";
             await fetch(`${baseUrl}/auth/session`, {
                 method: "DELETE",
                 headers: {
-                    "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "",
+                    "x-publishable-api-key": publishableKey,
                 },
                 credentials: "include",
             });
