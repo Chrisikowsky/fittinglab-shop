@@ -27,6 +27,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
             });
             setCustomer(customer);
         } catch (e) {
+            console.error("fetchCustomer failed:", e);
             // Not logged in or error
             setCustomer(null);
         } finally {
@@ -65,6 +66,10 @@ export function AccountProvider({ children }: { children: ReactNode }) {
 
             // After login, session is set cookie-wise.
             await fetchCustomer();
+
+            // Check if customer is set (need to access state or just check logic)
+            // Since fetchCustomer updates state, we can't check 'customer' immediately here due to closure.
+            // But we can check if we want to redirect.
             router.push("/account");
         } catch (e: any) {
             console.error("Login failed", e);
