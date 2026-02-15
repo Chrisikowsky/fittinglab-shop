@@ -1,5 +1,5 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http";
-import { registerCustomerWorkflow } from "../../../../../workflows/register-customer";
+import { registerCustomerWorkflow } from "../../../../workflows/register-customer";
 import { z } from "zod";
 
 const schema = z.object({
