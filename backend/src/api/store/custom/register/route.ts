@@ -29,9 +29,15 @@ export async function POST(
       message: "Successfully registered",
       customer: result.customer,
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message && error.message.includes("already exists")) {
+      res.status(409).json({
+        message: "Ein Benutzer mit dieser E-Mail-Adresse existiert bereits.",
+      });
+      return;
+    }
     res.status(400).json({
-      message: "Registration failed",
+      message: "Registrierung fehlgeschlagen",
       error: error.message,
     });
   }
