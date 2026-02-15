@@ -78,8 +78,11 @@ export const linkCustomerToAuthStep = createStep(
         return new StepResponse(void 0, { customerId, authIdentityId })
     },
     // No compensation needed for linking usually, or we can dismiss logic
-    async ({ customerId, authIdentityId }, { container }) => {
+    async (input, { container }) => {
         // implementation to dismiss link if needed
+        if (!input) return
+        const { customerId, authIdentityId } = input
+
         const remoteLink = container.resolve(ContainerRegistrationKeys.REMOTE_LINK)
         await remoteLink.dismiss({
             [Modules.AUTH]: {
