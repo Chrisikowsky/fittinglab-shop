@@ -53,6 +53,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         setLoading(true);
         try {
             // Step 1: Authenticate → get JWT token
+            console.log("[Login] Step 1: Authenticating...");
             const authRes = await fetch(`${baseUrl}/auth/customer/emailpass`, {
                 method: "POST",
                 headers: {
@@ -65,12 +66,21 @@ export function AccountProvider({ children }: { children: ReactNode }) {
 
             if (!authRes.ok) {
                 const data = await authRes.json();
+                console.error("[Login] Step 1 FAILED:", authRes.status, data);
                 throw new Error(data.message || "Login fehlgeschlagen");
             }
 
-            const { token } = await authRes.json();
+            const authData = await authRes.json();
+            console.log("[Login] Step 1 OK, response:", JSON.stringify(authData));
+            const token = authData.token;
+
+            if (!token) {
+                console.error("[Login] No token in auth response!");
+                throw new Error("Kein Token erhalten");
+            }
 
             // Step 2: Create session cookie using the JWT token
+            console.log("[Login] Step 2: Creating session...");
             const sessionRes = await fetch(`${baseUrl}/auth/session`, {
                 method: "POST",
                 headers: {
@@ -81,16 +91,21 @@ export function AccountProvider({ children }: { children: ReactNode }) {
                 credentials: "include",
             });
 
+            console.log("[Login] Step 2 status:", sessionRes.status);
+
             if (!sessionRes.ok) {
-                console.error("Session creation failed:", sessionRes.status);
+                const sessData = await sessionRes.json().catch(() => ({}));
+                console.error("[Login] Step 2 FAILED:", sessionRes.status, sessData);
                 throw new Error("Session konnte nicht erstellt werden");
             }
 
             // Step 3: Now fetch customer data (session cookie is set)
+            console.log("[Login] Step 3: Fetching customer...");
             await fetchCustomer();
+            console.log("[Login] Complete! Redirecting to /account");
             router.push("/account");
         } catch (e: any) {
-            console.error("Login failed", e);
+            console.error("[Login] FAILED:", e);
             throw e;
         } finally {
             setLoading(false);
