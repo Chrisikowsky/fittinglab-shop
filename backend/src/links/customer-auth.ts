@@ -5,6 +5,6 @@ import CustomerModule from "@medusajs/medusa/customer"
 // Define link between Customer and Auth Identity
 // This is required for the registration workflow to link the two entities
 export default defineLink(
-    { serviceName: "customer", field: "customer" },
-    { serviceName: "auth", field: "auth_identity" }
+    { serviceName: "customer", field: "customer", linkable: "customer", primaryKey: "id" },
+    { serviceName: "auth", field: "auth_identity", linkable: "authIdentity", primaryKey: "id" }
 )
