@@ -68,7 +68,7 @@ export const linkCustomerToAuthStep = createStep(
 
         await remoteLink.create({
             [Modules.AUTH]: {
-                auth_identity_id: authIdentityId
+                authIdentity_id: authIdentityId
             },
             [Modules.CUSTOMER]: {
                 customer_id: customerId
@@ -86,7 +86,7 @@ export const linkCustomerToAuthStep = createStep(
         const remoteLink = container.resolve(ContainerRegistrationKeys.REMOTE_LINK)
         await remoteLink.dismiss({
             [Modules.AUTH]: {
-                auth_identity_id: authIdentityId
+                authIdentity_id: authIdentityId
             },
             [Modules.CUSTOMER]: {
                 customer_id: customerId
