@@ -52,7 +52,8 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     const login = async (email: string, password: string) => {
         setLoading(true);
         try {
-            const response = await fetch(`${baseUrl}/auth/customer/emailpass`, {
+            // Step 1: Authenticate → get JWT token
+            const authRes = await fetch(`${baseUrl}/auth/customer/emailpass`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -62,12 +63,30 @@ export function AccountProvider({ children }: { children: ReactNode }) {
                 body: JSON.stringify({ email, password }),
             });
 
-            if (!response.ok) {
-                const data = await response.json();
+            if (!authRes.ok) {
+                const data = await authRes.json();
                 throw new Error(data.message || "Login fehlgeschlagen");
             }
 
-            // After login, session cookie is set. Now fetch customer data.
+            const { token } = await authRes.json();
+
+            // Step 2: Create session cookie using the JWT token
+            const sessionRes = await fetch(`${baseUrl}/auth/session`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                    "x-publishable-api-key": publishableKey,
+                },
+                credentials: "include",
+            });
+
+            if (!sessionRes.ok) {
+                console.error("Session creation failed:", sessionRes.status);
+                throw new Error("Session konnte nicht erstellt werden");
+            }
+
+            // Step 3: Now fetch customer data (session cookie is set)
             await fetchCustomer();
             router.push("/account");
         } catch (e: any) {
