@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useAccount } from "@/context/AccountContext";
-import { sdk } from "@/lib/medusa"; // Need SDK for registration? Or add register to context?
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -11,7 +10,6 @@ export default function RegisterPage() {
     const { login } = useAccount();
     const router = useRouter();
 
-    // Register fields
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [firstName, setFirstName] = useState("");
@@ -25,36 +23,58 @@ export default function RegisterPage() {
         setLoading(true);
         setError(null);
 
+        const baseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000";
+        const publishableKey = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "";
+
         try {
-            // WORKAROUND: Use fetch directly if SDK method fails or has strict types
-            // Endpoint: /auth/customer/emailpass/register (NOT /auth/user - user is for admin)
-            const baseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000";
-            const response = await fetch(`${baseUrl}/store/custom/register`, {
+            // ── Step 1: Register auth identity → get JWT token ──
+            const authRes = await fetch(`${baseUrl}/auth/customer/emailpass/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "",
+                    "x-publishable-api-key": publishableKey,
                 },
-                credentials: "include", // Required for cookies!
+                credentials: "include",
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (!authRes.ok) {
+                const authData = await authRes.json();
+                // Handle "identity already exists"
+                if (authRes.status === 400 || authRes.status === 409) {
+                    throw new Error("Ein Benutzer mit dieser E-Mail-Adresse existiert bereits.");
+                }
+                throw new Error(authData.message || "Registrierung fehlgeschlagen (Auth).");
+            }
+
+            const { token } = await authRes.json();
+
+            // ── Step 2: Create customer profile using the JWT token ──
+            const customerRes = await fetch(`${baseUrl}/store/customers`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                    "x-publishable-api-key": publishableKey,
+                },
+                credentials: "include",
                 body: JSON.stringify({
-                    email,
-                    password,
                     first_name: firstName,
                     last_name: lastName,
                 }),
             });
 
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.error || data.message || "Registrierung fehlgeschlagen.");
+            if (!customerRes.ok) {
+                const custData = await customerRes.json();
+                throw new Error(custData.message || "Kundenprofil konnte nicht erstellt werden.");
             }
 
-            // 2. Login (authenticate) just to be sure session is active
+            // ── Step 3: Log in to establish session ──
             await login(email, password);
 
         } catch (e: any) {
             console.error("Registrierung fehlgeschlagen:", e);
-            setError(e.message || "Registrierung fehlgeschlagen. Ist der User schon registriert?");
+            setError(e.message || "Registrierung fehlgeschlagen.");
         } finally {
             setLoading(false);
         }
