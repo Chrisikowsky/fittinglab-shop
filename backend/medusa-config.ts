@@ -33,6 +33,9 @@ const modules: any[] = [
             region: process.env.S3_REGION || "auto",
             bucket: process.env.S3_BUCKET || "fittinglab-media",
             endpoint: process.env.S3_ENDPOINT,
+            additional_client_config: {
+              forcePathStyle: true,
+            },
           },
         },
       ],
