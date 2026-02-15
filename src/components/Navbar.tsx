@@ -100,7 +100,7 @@ export function Navbar() {
                             )}
                         </Link>
 
-                        <Link href="/account/login" className="px-6 py-2.5 rounded-lg border border-white/20 text-white text-sm font-medium transition-all duration-300 hover:bg-white/10 hover:border-white/40 flex items-center gap-2 group">
+                        <Link href={customer ? "/account" : "/account/login"} className="px-6 py-2.5 rounded-lg border border-white/20 text-white text-sm font-medium transition-all duration-300 hover:bg-white/10 hover:border-white/40 flex items-center gap-2 group">
                             <User className="w-4 h-4 text-[#329ebf] group-hover:text-white transition-colors" />
                             {customer ? "Mein Konto" : "Partner Login"}
                         </Link>
@@ -170,7 +170,7 @@ export function Navbar() {
                                 className="mt-8"
                             >
                                 <Link
-                                    href="/account/login"
+                                    href={customer ? "/account" : "/account/login"}
                                     onClick={() => setIsOpen(false)}
                                     className="px-12 py-4 rounded-xl border-2 border-white/30 text-white text-xl font-bold inline-block"
                                 >
