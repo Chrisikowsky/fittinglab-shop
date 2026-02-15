@@ -23,7 +23,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
 
     const fetchCustomer = async () => {
         try {
-            const res = await fetch(`${baseUrl}/store/customers/me`, {
+            const res = await fetch(`${baseUrl}/store/customers/me?fields=+addresses`, {
                 method: "GET",
                 headers: {
                     "x-publishable-api-key": publishableKey,
