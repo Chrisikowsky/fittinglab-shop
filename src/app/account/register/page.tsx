@@ -46,7 +46,7 @@ export default function RegisterPage() {
 
             if (!response.ok) {
                 const data = await response.json();
-                throw new Error(data.message || "Registrierung fehlgeschlagen.");
+                throw new Error(data.error || data.message || "Registrierung fehlgeschlagen.");
             }
 
             // 2. Login (authenticate) just to be sure session is active
