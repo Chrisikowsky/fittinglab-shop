@@ -11,12 +11,45 @@ export default function AccountPage() {
     const { customer, loading, logout, refreshCustomer } = useAccount();
     const router = useRouter();
     const [editingAddress, setEditingAddress] = useState(false);
+    const [orders, setOrders] = useState<any[]>([]);
+    const [ordersLoading, setOrdersLoading] = useState(true);
+
+    const baseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000";
+    const publishableKey = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "";
 
     useEffect(() => {
         if (!loading && !customer) {
             router.push("/account/login");
         }
     }, [customer, loading, router]);
+
+    // Fetch orders separately via GET /store/orders
+    useEffect(() => {
+        if (!customer) return;
+
+        const fetchOrders = async () => {
+            try {
+                const res = await fetch(`${baseUrl}/store/orders`, {
+                    method: "GET",
+                    headers: {
+                        "x-publishable-api-key": publishableKey,
+                    },
+                    credentials: "include",
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    setOrders(data.orders || []);
+                }
+            } catch (e) {
+                console.error("Failed to fetch orders:", e);
+            } finally {
+                setOrdersLoading(false);
+            }
+        };
+
+        fetchOrders();
+    }, [customer]);
 
     if (loading || !customer) {
         return <div className="min-h-screen flex justify-center items-center"><Loader2 className="animate-spin text-[#329ebf] w-8 h-8" /></div>;
@@ -135,7 +168,11 @@ export default function AccountPage() {
                             Bestellhistorie
                         </h2>
 
-                        {(!customer.orders || customer.orders.length === 0) ? (
+                        {ordersLoading ? (
+                            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center">
+                                <Loader2 className="animate-spin text-[#329ebf] w-6 h-6 mx-auto" />
+                            </div>
+                        ) : orders.length === 0 ? (
                             <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center">
                                 <p className="text-slate-500 mb-4">Sie haben noch keine Bestellungen aufgegeben.</p>
                                 <Link href="/" className="text-[#329ebf] font-medium hover:underline">
@@ -144,7 +181,7 @@ export default function AccountPage() {
                             </div>
                         ) : (
                             <div className="space-y-4">
-                                {customer.orders.map((order: any) => (
+                                {orders.map((order: any) => (
                                     <div key={order.id} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-[#329ebf]/30 transition-colors flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                                         <div>
                                             <div className="flex items-center gap-3 mb-1">
