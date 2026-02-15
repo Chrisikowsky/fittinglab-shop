@@ -61,9 +61,9 @@ export function Navbar() {
                         <Image
                             src="/logo-v2.png"
                             alt="FittingLab Logo"
-                            width={180}
-                            height={52}
-                            className="object-contain md:scale-110 transition-transform origin-left brightness-0 invert"
+                            width={140}
+                            height={40}
+                            className="object-contain transition-transform origin-left brightness-0 invert"
                             priority
                         />
                     </Link>
