@@ -12,6 +12,8 @@ import { useAccount } from "@/context/AccountContext";
 
 const navLinks = [
     { name: "Produkte", href: "/" },
+    { name: "Hören im Abo", href: "#hoeren-im-abo" },
+    { name: "Soundgrid Pro", href: "#soundgrid-pro" },
     { name: "Über uns", href: "#about" },
     { name: "Kontakt", href: "#contact" },
 ];
@@ -52,18 +54,18 @@ export function Navbar() {
     return (
         <motion.nav
             style={{ y: navbarY, opacity: navbarOpacity }}
-            className="fixed top-0 left-0 w-full z-50 py-4 bg-gradient-to-r from-[#0f233a] to-slate-950 border-b border-white/5 shadow-xl shadow-black/20"
+            className="absolute top-0 left-0 w-full z-50 py-4 bg-transparent"
         >
             <div className="container mx-auto px-6">
                 <div className="relative flex items-center justify-between px-2 py-2 transition-all duration-500">
                     {/* Logo - White version */}
                     <Link href="/" className="relative z-50 flex items-center gap-2">
                         <Image
-                            src="/logo-v2.png"
+                            src="/logo.svg"
                             alt="FittingLab Logo"
-                            width={140}
-                            height={40}
-                            className="object-contain transition-transform origin-left brightness-0 invert"
+                            width={160}
+                            height={45}
+                            className="object-contain transition-transform origin-left"
                             priority
                         />
                     </Link>
@@ -79,8 +81,8 @@ export function Navbar() {
                                     className={cn(
                                         "text-lg font-medium transition-all duration-300 hover:text-[#329ebf]",
                                         isActive
-                                            ? "text-[#329ebf] font-bold"
-                                            : "text-white/90 hover:text-white"
+                                            ? "text-transparent bg-clip-text bg-gradient-to-r from-[#3a6297] to-[#329ebf] font-bold"
+                                            : "text-slate-900 hover:text-[#329ebf]"
                                     )}
                                 >
                                     {link.name}
@@ -91,18 +93,26 @@ export function Navbar() {
 
                     {/* Desktop Call to Action & Cart */}
                     <div className="hidden md:flex items-center gap-6">
-                        <Link href="/cart" className="relative group p-2">
-                            <ShoppingCart className="w-6 h-6 text-white/80 group-hover:text-[#329ebf] transition-colors" />
+                        <Link href="/cart" className="relative group p-2 flex items-center justify-center">
+                            <ShoppingCart className="w-7 h-7 text-slate-800 transition-all duration-300 group-hover:stroke-[var(--hover-color)]" style={{ '--hover-color': 'url(#cyan-gradient)' } as any} />
+                            {/* SVG Gradient definition for the icon hover */}
+                            <svg width="0" height="0" className="absolute">
+                                <linearGradient id="cyan-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop stopColor="#3a6297" offset="0%" />
+                                    <stop stopColor="#329ebf" offset="100%" />
+                                </linearGradient>
+                            </svg>
+
                             {itemCount > 0 && (
-                                <span className="absolute -top-1 -right-1 bg-[#329ebf] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center shadow-lg border border-[#0f233a]">
+                                <span className="absolute top-0 right-0 bg-[#329ebf] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center shadow-lg border border-white">
                                     {itemCount}
                                 </span>
                             )}
                         </Link>
 
-                        <Link href={customer ? "/account" : "/account/login"} className="px-6 py-2.5 rounded-lg border border-white/20 text-white text-sm font-medium transition-all duration-300 hover:bg-white/10 hover:border-white/40 flex items-center gap-2 group">
-                            <User className="w-4 h-4 text-[#329ebf] group-hover:text-white transition-colors" />
-                            {customer ? "Mein Konto" : "Partner Login"}
+                        <Link href={customer ? "/account" : "/account/login"} className="px-4 py-2 text-slate-800 text-base font-medium transition-all duration-300 flex items-center gap-2 group hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-[#3a6297] hover:to-[#329ebf]">
+                            <User className="w-5 h-5 text-slate-800 transition-all duration-300 group-hover:stroke-[url(#cyan-gradient)]" />
+                            <span>{customer ? "Mein Konto" : "Partner Login"}</span>
                         </Link>
                     </div>
 
@@ -111,7 +121,7 @@ export function Navbar() {
                         onClick={() => setIsOpen(!isOpen)}
                         className={cn(
                             "relative z-50 md:hidden p-2 transition-colors",
-                            "text-white"
+                            "text-slate-900"
                         )}
                         aria-label="Toggle Menu"
                     >

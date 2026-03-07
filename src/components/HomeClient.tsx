@@ -79,16 +79,18 @@ import { ProductCard } from "./ProductCard";
 export default function HomeClient({ products }: HomeClientProps) {
     return (
         <main className="min-h-screen relative overflow-hidden bg-[var(--background)]">
-            {/* Hero Background Image */}
-            <div className="absolute inset-0 w-full h-screen z-0 pointer-events-none">
-                <Image
-                    src="/hero/hero_hitbox_background.jpg"
-                    alt="Hero Background"
-                    fill
-                    className="object-cover opacity-95"
-                    priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#3a6297]/60 via-[#3a6297]/10 to-transparent" />
+            {/* Hero Background Video */}
+            <div className="absolute inset-0 w-full h-screen z-0 pointer-events-none overflow-hidden">
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover opacity-90"
+                >
+                    <source src="/hero/bluewave_hero_low.mp4" type="video/mp4" />
+                </video>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#3a6297]/60 via-[#3a6297]/10 to-transparent z-10" />
             </div>
 
             {/* Hero Section */}
@@ -97,10 +99,10 @@ export default function HomeClient({ products }: HomeClientProps) {
                     initial="hidden"
                     animate="visible"
                     variants={containerVariants}
-                    className="max-w-4xl mx-auto flex flex-col items-center text-center"
+                    className="max-w-6xl mx-auto flex flex-col items-center text-center w-full px-4"
                 >
                     {/* Hero Content */}
-                    <div className="space-y-8 z-10 flex flex-col items-center">
+                    <div className="space-y-8 z-10 flex flex-col items-center w-full">
                         <motion.h1 variants={itemVariants} className="text-5xl lg:text-8xl font-bold tracking-tight leading-[1.1] text-slate-900">
                             Smarte Tools <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3a6297] to-[#329ebf]">
@@ -108,7 +110,7 @@ export default function HomeClient({ products }: HomeClientProps) {
                             </span>
                         </motion.h1>
 
-                        <motion.p variants={itemVariants} className="text-2xl text-slate-100 max-w-lg font-medium leading-relaxed drop-shadow-md">
+                        <motion.p variants={itemVariants} className="text-3xl text-slate-800 max-w-6xl font-medium leading-relaxed drop-shadow-sm">
                             Exklusive Lösungen für inhabergeführte Akustiker, die mehr erreichen wollen. Steigern Sie Produktivität und Kundenzufriedenheit.
                         </motion.p>
 
@@ -134,7 +136,7 @@ export default function HomeClient({ products }: HomeClientProps) {
                         viewport={{ once: true, margin: "-100px" }}
                         className="max-w-4xl mx-auto"
                     >
-                        <h2 className="text-2xl md:text-4xl font-light leading-normal text-white mb-12 min-h-[120px]">
+                        <h2 className="text-xl md:text-3xl font-light leading-normal text-white mb-12 min-h-[120px]">
                             {"Moderne Messtechnik und Anpassverfahren mit System haben einen festen Platz in der Hörakustik von Heute und Morgen.".split("").map((char, index) => (
                                 <motion.span
                                     key={index}
@@ -245,7 +247,7 @@ export default function HomeClient({ products }: HomeClientProps) {
             <footer className="py-12 bg-slate-900 text-center text-slate-400 text-sm">
                 <div className="container mx-auto px-6">
                     <div className="mb-8 flex justify-center opacity-50 grayscale hover:grayscale-0 transition-all">
-                        <Image src="/logo-v2.png" alt="Logo" width={120} height={40} className="brightness-0 invert" />
+                        <Image src="/logo.svg" alt="Logo" width={120} height={40} className="brightness-0 invert" />
                     </div>
                     <p className="mb-4 text-[#329ebf]">Excellence in Hearing Technology.</p>
                     <p>© {new Date().getFullYear()} FittingLab Tech GmbH. All rights reserved.</p>
